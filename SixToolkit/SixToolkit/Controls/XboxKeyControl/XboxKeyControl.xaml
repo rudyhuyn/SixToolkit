@@ -1,0 +1,30 @@
+﻿<UserControl
+    x:Class="SixToolkit.Controls.XboxKeyControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    d:DesignHeight="300"
+    d:DesignWidth="400">
+    <UserControl.Resources>
+        <SolidColorBrush x:Key="XboxBlueBrush" Color="#24BCEE" />
+        <!-- used code-behind -->
+        <SolidColorBrush x:Key="XboxGreenBrush" Color="#7DC242" />
+        <!-- used code-behind -->
+        <SolidColorBrush x:Key="XboxRedBrush" Color="#ED1C24" />
+        <!-- used code-behind -->
+        <SolidColorBrush x:Key="XboxYellowBrush" Color="#F0EA1B" />
+    </UserControl.Resources>
+    <Grid>
+        <Ellipse x:Name="CircleBackground" Height="26" Width="26" Fill="{StaticResource XboxBlueBrush}" />
+        <TextBlock x:Name="Label" Foreground="White" FontWeight="SemiBold"
+                   FontSize="16" Margin="0,-1.5,0,0" VerticalAlignment="Center" HorizontalAlignment="Center" />
+        <Path x:Name="ViewPath"
+              Stretch="Uniform" Width="14"
+              Fill="#e0e0e0" Visibility="Collapsed" Data="{StaticResource GamepadViewPath}" />
+        <Path x:Name="PlayPath"
+              Stretch="Uniform" Width="10"
+              Fill="#e0e0e0" Visibility="Collapsed" Data="M0,0 L0,2 L1.5,1 z" />
+    </Grid>
+</UserControl>

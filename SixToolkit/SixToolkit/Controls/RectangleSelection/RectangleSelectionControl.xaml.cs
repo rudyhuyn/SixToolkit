@@ -1,5 +1,5 @@
 ﻿// ******************************************************************
-// Copyright (c) Rudy Huyn. All rights reserved.
+// Copyright (c) Rudy SixToolkit. All rights reserved.
 // This code is licensed under the MIT License (MIT).
 // THE CODE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
 // INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -8,7 +8,7 @@
 // DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
 // TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH
 // THE CODE OR THE USE OR OTHER DEALINGS IN THE CODE.
-// Source: https://github.com/rudyhuyn/huyntoolkit
+// Source: https://github.com/rudySixToolkit/SixToolkittoolkit
 // *****************************************************************
 
 using System;
@@ -20,7 +20,7 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Media;
 
-namespace Huyn
+namespace SixToolkit.Controls
 {
     public sealed partial class RectangleSelectionControl : UserControl
     {
@@ -112,7 +112,6 @@ namespace Huyn
 
         private void CleanSelection()
         {
-            IsHitTestVisible = false;
             _coreWindow.PointerExited -= _coreWindow_PointerExited;
             _coreWindow.PointerMoved -= RectangularSelectionControl_PointerMoved;
             _coreWindow.PointerReleased -= CoreWindow_PointerReleased;
@@ -142,7 +141,6 @@ namespace Huyn
                 }
 
                 _selectionStarted = true;
-                IsHitTestVisible = true;
                 RootPanel.Visibility = Windows.UI.Xaml.Visibility.Visible;
             }
 
@@ -159,9 +157,15 @@ namespace Huyn
             }
 
             if (startX < 0)
+            {
                 startX = 0;
+            }
+
             if (endX > ActualWidth)
+            {
                 endX = ActualWidth;
+            }
+
             Canvas.SetLeft(SelectionRect, startX);
             SelectionRect.Width = endX - startX;
 
@@ -178,9 +182,15 @@ namespace Huyn
             }
 
             if (startY < 0)
+            {
                 startY = 0;
+            }
+
             if (endY > ActualHeight)
+            {
                 endY = ActualHeight;
+            }
+
             Canvas.SetTop(SelectionRect, startY);
             SelectionRect.Height = endY - startY;
 
@@ -222,5 +232,28 @@ namespace Huyn
         }
 
         #endregion
+
+        #region RectangleStyle
+
+
+
+        public Style RectangleStyle
+        {
+            get => (Style)GetValue(RectangleStyleProperty);
+            set => SetValue(RectangleStyleProperty, value);
+        }
+
+        // Using a DependencyProperty as the backing store for RectangleStyle.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty RectangleStyleProperty =
+            DependencyProperty.Register("RectangleStyle", typeof(Style), typeof(RectangleSelectionControl), new PropertyMetadata(null, RectangleStyleCallback));
+
+        private static void RectangleStyleCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var ctrl = ((RectangleSelectionControl)d);
+            ctrl.SelectionRect.Style = (Style)e.NewValue ?? (Style)ctrl.Resources["RectangleStyle"];
+        }
+
+        #endregion
+
     }
 }

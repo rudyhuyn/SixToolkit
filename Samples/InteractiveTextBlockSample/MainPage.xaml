@@ -1,0 +1,50 @@
+﻿<Page
+    x:Class="InteractiveTextBlock.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:SixToolkit.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <StackPanel Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Padding="12">
+
+        <TextBlock Text="Format:" Foreground="Gray" />
+        <TextBlock Text="{x:Bind InterTextBlock.Format,Mode=OneWay}" TextWrapping="Wrap" />
+        <TextBlock Text="Values:" Foreground="Gray" Margin="0,24,0,0"/>
+        <ItemsControl ItemsSource="{x:Bind InterTextBlock.Values,Mode=OneWay}">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Margin="0,0,32,0">
+                        <Run Text="{Binding Text}" />(<Run Text="{Binding Action}"/>)
+                    </TextBlock>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel Orientation="Horizontal"/>
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+        </ItemsControl>
+
+        <TextBlock Text="Result:" Foreground="Gray" Margin="0,48" />
+        <local:InteractiveTextBlock x:Name="InterTextBlock" MaxWidth="300" ActionClicked="Text_ActionClicked"  
+                                    Foreground="DarkBlue" TextWrapping="Wrap" TextAlignment="Center" ActionFontWeight="Bold" ActionForeground="Green" >
+            <local:InteractiveTextBlock.Values>
+                <local:InteractiveTextBlockValue Text="hare" Action="value=1" />
+                <local:InteractiveTextBlockValue Text="tortoise" Action="value=2" />
+                <local:InteractiveTextBlockValue Text="tree" Action="value=3" />
+            </local:InteractiveTextBlock.Values>
+        </local:InteractiveTextBlock>
+        <TextBlock Text="Actions:" Foreground="Gray" Margin="0,48,0,0" />
+        <StackPanel Margin="0,12,0,0" >
+            <Button Content="Add Value" Click="ButtonAddValue_Click" Margin="0,6" />
+            <StackPanel Orientation="Horizontal" Margin="0,6">
+                <Button Content="Change 1st Value" Click="ButtonChangeFirstValue_Click" />
+                <TextBlock VerticalAlignment="Center" Text="(Note: only the specific Run is updated, not all the TextBlock content)" FontSize="12" Margin="12,0,0,0"  />
+            </StackPanel>
+            <Button Content="Change Format" Click="ButtonChangeFormat_Click" Margin="0,6"/>
+            <Button Content="Change Color" Click="ButtonChangeColor_Click" Margin="0,6"/>
+        </StackPanel>
+    </StackPanel>
+</Page>
