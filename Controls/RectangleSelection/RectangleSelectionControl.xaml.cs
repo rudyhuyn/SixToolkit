@@ -24,6 +24,7 @@ namespace Huyn
 {
     public sealed partial class RectangleSelectionControl : UserControl
     {
+        private const uint MinimumSelectionSize = 30;
         private GeneralTransform _transform;
         private Point? _startPoint = null;
         private Point? _endPoint = null;
@@ -32,6 +33,7 @@ namespace Huyn
         private readonly Window _window;
         private readonly CoreWindow _coreWindow;
         public event EventHandler<Rect> SelectionMade;
+        private bool _selectionStarted;
 
         public RectangleSelectionControl()
         {
@@ -41,14 +43,19 @@ namespace Huyn
             _coreWindow = CoreWindow.GetForCurrentThread();
         }
 
+        public bool IsInProgress()
+        {
+            return IsEnabled && _startPoint != null;
+        }
+
         private void _coreWindow_PointerExited(CoreWindow sender, PointerEventArgs args)
         {
             CleanSelection();
         }
 
-        private static Rect? GetBoundsRelativeTo( FrameworkElement element, UIElement otherElement)
+        private static Rect? GetBoundsRelativeTo(FrameworkElement element, UIElement otherElement)
         {
-         
+
             try
             {
                 var generalTransform = element.TransformToVisual(otherElement);
@@ -67,11 +74,6 @@ namespace Huyn
 
         private void RectangularSelectionControl_PointerPressed(CoreWindow sender, PointerEventArgs args)
         {
-            if (!IsEnabled)
-            {
-                return;
-            }
-
             var controlRect = GetBoundsRelativeTo(this, Window.Current.Content);
             if (!controlRect.HasValue || !controlRect.Value.Contains(args.CurrentPoint.Position))
             {
@@ -87,7 +89,6 @@ namespace Huyn
             _transform = _window.Content.TransformToVisual(this);
             _startPointOriginal = args.CurrentPoint.Position;
             _startPoint = _transform.TransformPoint(args.CurrentPoint.Position);
-
             _coreWindow.PointerExited += _coreWindow_PointerExited;
             _coreWindow.PointerMoved += RectangularSelectionControl_PointerMoved;
             _coreWindow.PointerReleased += CoreWindow_PointerReleased;
@@ -111,11 +112,13 @@ namespace Huyn
 
         private void CleanSelection()
         {
+            IsHitTestVisible = false;
             _coreWindow.PointerExited -= _coreWindow_PointerExited;
             _coreWindow.PointerMoved -= RectangularSelectionControl_PointerMoved;
             _coreWindow.PointerReleased -= CoreWindow_PointerReleased;
             RootPanel.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
             _endPoint = _startPoint = null;
+            _selectionStarted = false;
         }
 
         private void RectangularSelectionControl_PointerMoved(CoreWindow sender, PointerEventArgs args)
@@ -124,30 +127,63 @@ namespace Huyn
             {
                 return;
             }
+
             var startPoint = _startPoint.Value;
             var newPoint = _transform.TransformPoint(args.CurrentPoint.Position);
-            RootPanel.Visibility = Windows.UI.Xaml.Visibility.Visible;
-            if (startPoint.X < newPoint.X)
+
+            if (!_selectionStarted)
             {
-                Canvas.SetLeft(SelectionRect, startPoint.X);
-                SelectionRect.Width = newPoint.X - startPoint.X;
-            }
-            else
-            {
-                Canvas.SetLeft(SelectionRect, newPoint.X);
-                SelectionRect.Width = startPoint.X - newPoint.X;
+                var diffX = (_startPoint.Value.X - newPoint.X);
+                var diffY = (_startPoint.Value.Y - newPoint.Y);
+                var distanceSquare = diffX * diffX + diffY * diffY;
+                if (distanceSquare < MinimumSelectionSize * MinimumSelectionSize)
+                {
+                    return;
+                }
+
+                _selectionStarted = true;
+                IsHitTestVisible = true;
+                RootPanel.Visibility = Windows.UI.Xaml.Visibility.Visible;
             }
 
-            if (startPoint.Y < newPoint.Y)
+            double startX, endX;
+            if (startPoint.X < newPoint.X)
             {
-                Canvas.SetTop(SelectionRect, startPoint.Y);
-                SelectionRect.Height = newPoint.Y - startPoint.Y;
+                startX = startPoint.X;
+                endX = newPoint.X;
             }
             else
             {
-                Canvas.SetTop(SelectionRect, newPoint.Y);
-                SelectionRect.Height = startPoint.Y - newPoint.Y;
+                startX = newPoint.X;
+                endX = startPoint.X;
             }
+
+            if (startX < 0)
+                startX = 0;
+            if (endX > ActualWidth)
+                endX = ActualWidth;
+            Canvas.SetLeft(SelectionRect, startX);
+            SelectionRect.Width = endX - startX;
+
+            double startY, endY;
+            if (startPoint.Y < newPoint.Y)
+            {
+                startY = startPoint.Y;
+                endY = newPoint.Y;
+            }
+            else
+            {
+                startY = newPoint.Y;
+                endY = startPoint.Y;
+            }
+
+            if (startY < 0)
+                startY = 0;
+            if (endY > ActualHeight)
+                endY = ActualHeight;
+            Canvas.SetTop(SelectionRect, startY);
+            SelectionRect.Height = endY - startY;
+
 
             _endPoint = newPoint;
             _endPointOriginal = args.CurrentPoint.Position;
