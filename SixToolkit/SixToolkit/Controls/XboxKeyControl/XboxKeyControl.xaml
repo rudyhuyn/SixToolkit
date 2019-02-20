@@ -8,13 +8,15 @@
     d:DesignHeight="300"
     d:DesignWidth="400">
     <UserControl.Resources>
-        <SolidColorBrush x:Key="XboxBlueBrush" Color="#24BCEE" />
-        <!-- used code-behind -->
-        <SolidColorBrush x:Key="XboxGreenBrush" Color="#7DC242" />
-        <!-- used code-behind -->
-        <SolidColorBrush x:Key="XboxRedBrush" Color="#ED1C24" />
-        <!-- used code-behind -->
-        <SolidColorBrush x:Key="XboxYellowBrush" Color="#F0EA1B" />
+        <SolidColorBrush x:Key="FeatureButtonBrush" Color="#e0e0e0" />
+        <SolidColorBrush x:Key="XboxBlueBrush" Color="#11679E" />
+        <SolidColorBrush x:Key="XboxGreenBrush" Color="#407C1B" />
+        <SolidColorBrush x:Key="XboxRedBrush" Color="#E31123" />
+        <SolidColorBrush x:Key="XboxYellowBrush" Color="#FEFE00" />
+        <SolidColorBrush x:Key="XboxDarkYellowBrush" Color="#D8D800" />
+        <x:String x:Key="GamepadViewPath">M15,13 L15,30 L38,30 L38,13 z M12,10 L15,10 L38,10 L41,10 L41,13 L41,30 L41,33 L38,33 L15,33 L12,33 L12,30 L12,13 z M0,0 L3,0 L29,0 L29,2 L29,7 L26,7 L26,3 L3,3 L3,20 L9,20 L9,23 L3,23 L0,23 L0,3 z</x:String>
+        <x:String x:Key="MenuPath">M0,0 L0,1 L6,1 L6,0 z M0,2.5 L0,3.5 L6,3.5 L6,2.5 z M0,5 L0,6 L6,6 L6,5 z</x:String>
+        <x:String x:Key="PlayButton">M0,0 L0,2 L1.5,1 z</x:String>
     </UserControl.Resources>
     <Grid>
         <Ellipse x:Name="CircleBackground" Height="26" Width="26" Fill="{StaticResource XboxBlueBrush}" />
@@ -22,9 +24,12 @@
                    FontSize="16" Margin="0,-1.5,0,0" VerticalAlignment="Center" HorizontalAlignment="Center" />
         <Path x:Name="ViewPath"
               Stretch="Uniform" Width="14"
-              Fill="#e0e0e0" Visibility="Collapsed" Data="{StaticResource GamepadViewPath}" />
+              Fill="{StaticResource FeatureButtonBrush}" Visibility="Collapsed" Data="{StaticResource GamepadViewPath}" />
         <Path x:Name="PlayPath"
               Stretch="Uniform" Width="10"
-              Fill="#e0e0e0" Visibility="Collapsed" Data="M0,0 L0,2 L1.5,1 z" />
+              Fill="{StaticResource FeatureButtonBrush}" Visibility="Collapsed" Margin="2,0,0,0" Data="{StaticResource PlayButton}" />
+        <Path x:Name="MenuPath"
+              Stretch="Uniform" Width="11"
+              Fill="{StaticResource FeatureButtonBrush}" Visibility="Collapsed" Data="{StaticResource MenuPath}" />
     </Grid>
 </UserControl>

@@ -1,4 +1,17 @@
-﻿using Windows.UI.Xaml;
+﻿// *****************************************************************
+// Copyright (c) 2019. All rights reserved.
+// This code is licensed under the MIT License (MIT).
+// THE CODE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+// INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+// IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+// TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH
+// THE CODE OR THE USE OR OTHER DEALINGS IN THE CODE.
+// Source: https://github.com/rudyhuyn/SixToolkit
+// *****************************************************************
+
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media;
 
@@ -19,7 +32,12 @@ namespace SixToolkit.Panels
         {
             base.OnApplyTemplate();
 
-            _container = (Grid)VisualTreeHelper.GetChild(this, 0);
+            _container = VisualTreeHelper.GetChild(this, 0) as Grid;
+            if (_container == null)
+            {
+                return;
+            }
+
             _innerContentPresenter = (ContentPresenter)VisualTreeHelper.GetChild(_container, 0);
 
             if (ContentVerticalAlignment != VerticalAlignment.Center)
@@ -64,7 +82,7 @@ namespace SixToolkit.Panels
 
         private void ManageContentVerticalAlignment(VerticalAlignment value)
         {
-            if (_innerContentPresenter == null)
+            if (_innerContentPresenter == null || _container == null)
             {
                 return;
             }
@@ -127,7 +145,7 @@ namespace SixToolkit.Panels
 
         private void ManageContentHorizontalAlignment(HorizontalAlignment value)
         {
-            if (_innerContentPresenter == null)
+            if (_innerContentPresenter == null || _container == null)
             {
                 return;
             }
@@ -179,7 +197,7 @@ namespace SixToolkit.Panels
 
         private void ManageMaxHeight(double value)
         {
-            if (_innerContentPresenter == null)
+            if (_innerContentPresenter == null || _container == null)
             {
                 return;
             }
@@ -230,7 +248,7 @@ namespace SixToolkit.Panels
 
         private void ManageMaxWidth(double value)
         {
-            if (_innerContentPresenter == null)
+            if (_innerContentPresenter == null || _container == null)
             {
                 return;
             }
@@ -332,7 +350,7 @@ namespace SixToolkit.Panels
 
         private void ManageMinWidth(double value)
         {
-            if (_innerContentPresenter == null)
+            if (_innerContentPresenter == null || _container == null)
             {
                 return;
             }
