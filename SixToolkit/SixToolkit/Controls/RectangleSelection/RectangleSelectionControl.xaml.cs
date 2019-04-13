@@ -75,7 +75,7 @@ namespace SixToolkit.Controls
         private void RectangularSelectionControl_PointerPressed(CoreWindow sender, PointerEventArgs args)
         {
             var controlRect = GetBoundsRelativeTo(this, Window.Current.Content);
-            if (!controlRect.HasValue || !controlRect.Value.Contains(args.CurrentPoint.Position))
+            if (args.CurrentPoint.PointerDevice.PointerDeviceType != Windows.Devices.Input.PointerDeviceType.Mouse || !controlRect.HasValue || !controlRect.Value.Contains(args.CurrentPoint.Position))
             {
                 return;
             }
